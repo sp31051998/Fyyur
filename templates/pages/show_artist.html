@@ -1,3 +1,22 @@
+<style>
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 25px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  background-color: white; 
+  color: red; 
+  border: 2px solid #ffffff;
+  
+}
+</style>
 {% extends 'layouts/main.html' %}
 {% block title %}{{ artist.name }} | Artist{% endblock %}
 {% block content %}
@@ -5,9 +24,12 @@
 	<div class="col-sm-6">
 		<h1 class="monospace">
 			{{ artist.name }}
+			<button id = "delete-button" class="button">&#10005;</button>
+
 		</h1>
 		<p class="subtitle">
 			ID: {{ artist.id }}
+			
 		</p>
 		<div class="genres">
 			{% for genre in artist.genres %}
@@ -70,7 +92,32 @@
 		</div>
 		{% endfor %}
 	</div>
+	<script>
+		const deleteBtn = document.getElementById('delete-button');
+		deleteBtn.onclick = function(e) {
+			
+			const todoId = {{ artist.id }}
+			console.log(todoId, "G")
+			fetch('/artists/' + todoId, {
+			method: 'DELETE',
+			headers: {
+              'Content-Type': 'application/json'
+            }
+			})
+			.then(response => response.json())
+			.then(jsonResponse => {
+				console.log(jsonResponse)
+				window.location.href = "http://127.0.0.1:5000/artists";
+			})
+          	.catch(function() {
+            	console.log("Failure")
+				alert("Failed to delete Artist")
+          	})
+		}
+		
+	</script>
 </section>
+
 
 {% endblock %}
 
